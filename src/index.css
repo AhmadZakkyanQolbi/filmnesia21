@@ -1,0 +1,234 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #0a0a0a;
+  --bg-card: #111111;
+  --bg-input: #0e0e0e;
+  --border: #1e1e1e;
+  --border-hover: rgba(200, 169, 110, 0.4);
+  --text: #e5e5e5;
+  --text-muted: #888888;
+  --text-dim: #484848;
+  --gold: #c8a96e;
+  --gold-hover: #d4b87c;
+  --gold-glow: rgba(200, 169, 110, 0.15);
+  --font: 'EB Garamond', Georgia, serif;
+  --transition: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* Reset & Base */
+html {
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.6;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Animated background */
+body::before {
+  content: '';
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: 
+    radial-gradient(ellipse at 20% 20%, rgba(200, 169, 110, 0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(200, 169, 110, 0.02) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(200, 169, 110, 0.01) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+  animation: bgFloat 30s ease-in-out infinite alternate;
+}
+
+@keyframes bgFloat {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  33% { transform: translate(2%, -2%) rotate(1deg); }
+  66% { transform: translate(-2%, 1%) rotate(-1deg); }
+  100% { transform: translate(1%, 2%) rotate(0.5deg); }
+}
+
+/* Typography */
+button {
+  font-family: var(--font);
+  cursor: pointer;
+  outline: none;
+}
+
+input {
+  font-family: var(--font);
+  outline: none;
+}
+
+a {
+  font-family: var(--font);
+  text-decoration: none;
+}
+
+/* ============================================
+   TEKS STREAMING TERLENGKAP INDONESIA
+   ============================================ */
+.streaming-badge {
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+  background: linear-gradient(135deg, rgba(200, 169, 110, 0.15), rgba(200, 169, 110, 0.05));
+  padding: 6px 18px;
+  border-radius: 20px;
+  border: 1px solid rgba(200, 169, 110, 0.15);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.streaming-badge .highlight {
+  color: var(--gold);
+  font-weight: 700;
+}
+
+/* Hero Title */
+.hero-title {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.1;
+  margin-bottom: 8px;
+  letter-spacing: 0.02em;
+}
+
+.hero-title .gold {
+  color: var(--gold);
+  font-weight: 700;
+}
+
+.hero-subtitle {
+  font-size: clamp(1rem, 2vw, 1.4rem);
+  font-weight: 600;
+  color: #ffffff;
+  opacity: 0.9;
+  margin-bottom: 4px;
+  letter-spacing: 0.05em;
+}
+
+.hero-description {
+  font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+  font-weight: 500;
+  color: #dddddd;
+  opacity: 0.8;
+  max-width: 700px;
+  line-height: 1.6;
+}
+
+/* ============================================
+   SCROLLBAR
+   ============================================ */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, var(--gold), #d4b87c);
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #d4b87c, var(--gold));
+  box-shadow: 0 0 20px rgba(200, 169, 110, 0.2);
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--gold) transparent;
+}
+
+/* Selection */
+::selection {
+  background: rgba(200, 169, 110, 0.25);
+  color: #fff;
+}
+
+::-moz-selection {
+  background: rgba(200, 169, 110, 0.25);
+  color: #fff;
+}
+
+/* Focus styles */
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+/* Loading animation for images */
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+img:not([src]) {
+  opacity: 0;
+}
+
+/* Utility classes */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+/* Smooth transition for theme changes */
+* {
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Responsive font sizes */
+@media (max-width: 768px) {
+  html {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+/* Print styles */
+@media print {
+  body::before {
+    display: none;
+  }
+  
+  ::-webkit-scrollbar {
+    display: none;
+  }
+}

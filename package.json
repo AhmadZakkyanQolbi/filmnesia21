@@ -1,0 +1,31 @@
+{
+  "name": "cinescope",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "audit": "npm audit",
+    "security": "npm audit fix"
+  },
+  "dependencies": {
+    "@definisi/vidsrc-scraper": "^2.0.2",
+    "agent-base": "^7.0.0",
+    "axios": "^1.8.4",
+    "follow-redirects": "^1.16.0",
+    "hls.js": "^1.7.1",
+    "https-proxy-agent": "^7.0.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-helmet-async": "^3.0.0",
+    "tmdb-embed-providers": "^0.1.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.1.1",
+    "vite": "^8.2.2"
+  },
+  "overrides": {
+    "axios": "^1.8.4"
+  }
+}

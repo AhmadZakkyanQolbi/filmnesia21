@@ -1,0 +1,214 @@
+.filterWrap {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 16px;
+  padding: 14px 18px;
+  margin-bottom: 1.5rem;
+}
+
+.filterHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.filterIcon {
+  font-size: 14px;
+}
+
+.filterLabel {
+  font-size: 11px;
+  color: #777;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.clearFilter {
+  background: rgba(255, 255, 255, 0.03);
+  border: none;
+  color: #666;
+  font-size: 11px;
+  padding: 2px 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-left: auto;
+}
+
+.clearFilter:hover {
+  background: rgba(200, 169, 110, 0.1);
+  color: var(--gold);
+}
+
+.filterGroups {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.filterBtn {
+  padding: 4px 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 16px;
+  color: #777;
+  font-size: 11px;
+  font-family: var(--font);
+  letter-spacing: 0.04em;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.filterBtn:hover {
+  border-color: rgba(200, 169, 110, 0.15);
+  color: #ccc;
+}
+
+.filterBtn.active {
+  background: linear-gradient(135deg, var(--gold), #d4b87c);
+  border-color: var(--gold);
+  color: #0a0a0a;
+  font-weight: 600;
+}
+
+.filterBtnLabel {
+  font-size: 11px;
+}
+
+.filterBadge {
+  font-size: 9px;
+}
+
+.filterDivider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.03);
+  margin: 10px 0;
+}
+
+.filterAdvanced {
+  position: relative;
+}
+
+.advancedBtn {
+  background: none;
+  border: none;
+  color: #555;
+  font-size: 11px;
+  font-family: var(--font);
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.3s ease;
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+
+.advancedBtn:hover {
+  color: #999;
+}
+
+.advancedArrow {
+  font-size: 10px;
+  opacity: 0.5;
+}
+
+.dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 280px;
+  background: #111;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 14px;
+  z-index: 50;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+}
+
+.dropdownContent {
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.dropdownTitle {
+  font-size: 11px;
+  color: #666;
+  margin-bottom: 8px;
+  letter-spacing: 0.06em;
+}
+
+.genreGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 4px;
+}
+
+.genreBtn {
+  padding: 4px 10px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  border-radius: 6px;
+  color: #777;
+  font-size: 10px;
+  font-family: var(--font);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  text-align: left;
+}
+
+.genreBtn:hover {
+  border-color: rgba(200, 169, 110, 0.1);
+  color: #ccc;
+}
+
+.genreBtn.active {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.genreLoading {
+  color: #444;
+  font-size: 11px;
+  font-style: italic;
+  padding: 8px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .filterWrap {
+    padding: 10px 12px;
+  }
+  
+  .filterBtn {
+    padding: 3px 10px;
+    font-size: 10px;
+  }
+  
+  .dropdown {
+    min-width: 200px;
+    right: 0;
+    left: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .filterBtnLabel {
+    font-size: 9px;
+  }
+  
+  .filterBadge {
+    display: none;
+  }
+  
+  .genreGrid {
+    grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
+  }
+}

@@ -1,0 +1,607 @@
+.searchRow {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 2.5rem;
+  background: rgba(255, 255, 255, 0.02);
+  padding: 6px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.searchRow:focus-within {
+  border-color: rgba(200, 169, 110, 0.15);
+  box-shadow: 0 4px 40px rgba(0, 0, 0, 0.3);
+}
+
+.searchWrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 12px;
+  padding: 0 4px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.searchWrap:focus-within {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.searchIcon {
+  font-size: 16px;
+  color: #666;
+  padding: 0 8px 0 14px;
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+
+.searchWrap:focus-within .searchIcon {
+  opacity: 1;
+  color: var(--gold);
+}
+
+.input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  padding: 14px 8px;
+  font-size: 16px;
+  font-family: var(--font);
+  outline: none;
+  transition: all 0.3s ease;
+  min-width: 0;
+}
+
+.input::placeholder {
+  color: #888888;
+  font-style: normal;
+  opacity: 0.8;
+}
+
+.clearBtn {
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 14px;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.clearBtn:hover {
+  color: #fff;
+  transform: scale(1.1);
+}
+
+.input:not(:placeholder-shown) ~ .clearBtn,
+.clearBtn:hover {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.btn {
+  padding: 14px 36px;
+  background: linear-gradient(135deg, var(--gold), #d4b87c);
+  color: #0a0a0a;
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  font-family: var(--font);
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  white-space: nowrap;
+  box-shadow: 0 4px 20px rgba(200, 169, 110, 0.15);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 35px rgba(200, 169, 110, 0.25);
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btnIcon {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.labelWrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.labelLeft {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.sectionLabel {
+  font-size: 13px;
+  letter-spacing: 0.25em;
+  color: var(--gold);
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.8;
+  position: relative;
+  padding-left: 16px;
+  margin: 0;
+}
+
+.sectionLabel::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 20px;
+  background: linear-gradient(to bottom, var(--gold), transparent);
+  border-radius: 2px;
+}
+
+.resultCount {
+  font-size: 12px;
+  color: #555;
+  letter-spacing: 0.05em;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 4px 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  font-weight: 300;
+}
+
+.comicGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.5rem;
+  padding: 0.5rem 0;
+}
+
+.comicCard {
+  background: #111;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.comicCard:hover {
+  transform: translateY(-6px);
+  border-color: rgba(200, 169, 110, 0.15);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+
+.comicCard.active {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 2px rgba(200, 169, 110, 0.15);
+}
+
+.comicCover {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  background: #0a0a0a;
+}
+
+.coverImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.comicCard:hover .coverImage {
+  transform: scale(1.05);
+}
+
+.noCover {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  color: #222;
+}
+
+.comicBadge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(0, 0, 0, 0.8);
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 9px;
+  color: #aaa;
+  letter-spacing: 0.04em;
+  backdrop-filter: blur(4px);
+}
+
+.comicInfo {
+  padding: 12px 14px 14px;
+}
+
+.comicTitle {
+  font-size: 13px;
+  color: #e8e8e8;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 4px;
+}
+
+.comicMeta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: #555;
+}
+
+.comicAuthor {
+  color: #777;
+}
+
+.comicYear {
+  color: #444;
+}
+
+.comicTags {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+
+.tag {
+  font-size: 9px;
+  color: #555;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 2px 8px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.skeletonCard {
+  background: #111;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  overflow: hidden;
+  aspect-ratio: 2 / 3.5;
+}
+
+.skeletonImage {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  background: linear-gradient(90deg, #141414 25%, #1e1e1e 50%, #141414 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.8s ease-in-out infinite;
+}
+
+.skeletonTitle {
+  height: 14px;
+  margin: 10px 12px 6px;
+  background: #1a1a1a;
+  border-radius: 4px;
+}
+
+.skeletonSub {
+  height: 10px;
+  margin: 0 12px 12px;
+  background: #121212;
+  border-radius: 4px;
+  width: 60%;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.chapterView {
+  background: linear-gradient(165deg, #0f0f0f, #0a0a0a);
+  border: 1px solid rgba(200, 169, 110, 0.06);
+  border-radius: 16px;
+  margin-bottom: 2rem;
+  overflow: hidden;
+  animation: slideDown 0.4s ease;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.chapterHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  background: linear-gradient(135deg, rgba(200, 169, 110, 0.03), transparent);
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.chapterHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.chapterTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+  font-family: var(--font);
+  font-style: italic;
+}
+
+.chapterCount {
+  font-size: 12px;
+  color: #666;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 2px 12px;
+  border-radius: 12px;
+}
+
+.closeChapterBtn {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  color: #666;
+  padding: 6px 16px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.closeChapterBtn:hover {
+  color: #fff;
+  border-color: rgba(200, 169, 110, 0.2);
+}
+
+.chapterList {
+  padding: 16px 20px;
+  max-height: 500px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.chapterList::-webkit-scrollbar {
+  width: 4px;
+}
+
+.chapterList::-webkit-scrollbar-thumb {
+  background: rgba(200, 169, 110, 0.15);
+  border-radius: 2px;
+}
+
+.chapterItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px solid rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+  color: #ccc;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-family: var(--font);
+}
+
+.chapterItem:hover {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(200, 169, 110, 0.05);
+  color: #fff;
+}
+
+.chapterNumber {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.chapterMeta {
+  font-size: 11px;
+  color: #555;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.chapterDate {
+  color: #444;
+}
+
+.noChapters {
+  color: #555;
+  font-style: italic;
+  text-align: center;
+  padding: 20px 0;
+  font-size: 14px;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 4rem 2rem;
+  border: 2px dashed rgba(200, 169, 110, 0.05);
+  border-radius: 16px;
+}
+
+.emptyIcon {
+  font-size: 3rem;
+  opacity: 0.3;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.emptyState p {
+  color: #666;
+  font-size: 16px;
+  margin: 0;
+}
+
+.emptySub {
+  color: #444;
+  font-size: 13px;
+  font-style: italic;
+  margin-top: 4px !important;
+}
+
+@media (max-width: 768px) {
+  .searchRow {
+    flex-direction: column;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+  }
+  
+  .searchWrap {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 14px;
+  }
+  
+  .input {
+    padding: 12px 8px;
+    font-size: 15px;
+  }
+  
+  .btn {
+    justify-content: center;
+    padding: 12px 24px;
+    font-size: 13px;
+  }
+  
+  .comicGrid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+  }
+  
+  .chapterHeader {
+    padding: 14px 16px;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .chapterList {
+    padding: 14px 16px;
+    max-height: 400px;
+  }
+  
+  .chapterItem {
+    padding: 8px 12px;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  
+  .chapterNumber {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .input {
+    padding: 10px 6px;
+    font-size: 14px;
+  }
+  
+  .btn {
+    padding: 10px 20px;
+    font-size: 12px;
+  }
+  
+  .comicGrid {
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 0.75rem;
+  }
+  
+  .comicTitle {
+    font-size: 12px;
+  }
+  
+  .comicMeta {
+    font-size: 10px;
+  }
+  
+  .chapterTitle {
+    font-size: 14px;
+  }
+
+  /* Tambahkan di bagian atas atau bawah Comics.module.css */
+
+.errorBox {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 68, 68, 0.05);
+  border: 1px solid rgba(255, 68, 68, 0.1);
+  border-radius: 12px;
+  padding: 14px 18px;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.errorIcon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.errorText {
+  flex: 1;
+  color: #ff6b6b;
+  font-size: 14px;
+  font-family: var(--font);
+  min-width: 200px;
+}
+
+.errorRetry {
+  padding: 6px 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+  font-family: var(--font);
+  font-size: 12px;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.errorRetry:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Rest CSS sama seperti sebelumnya */
+}

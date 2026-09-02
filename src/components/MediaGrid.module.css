@@ -1,0 +1,240 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1.5rem;
+  padding: 0.5rem 0;
+}
+
+/* Skeleton Loading */
+.skeleton {
+  border-radius: 16px;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  background: linear-gradient(145deg, #0f0f0f, #0a0a0a);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  position: relative;
+}
+
+.skeletonInner {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.02) 25%,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(255, 255, 255, 0.02) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.8s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Empty State */
+.emptyWrap {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 4rem 2rem;
+  border: 2px dashed rgba(200, 169, 110, 0.08);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.01);
+  transition: all 0.3s ease;
+}
+
+.emptyWrap:hover {
+  border-color: rgba(200, 169, 110, 0.15);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.emptyIcon {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.empty {
+  color: #666;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+}
+
+.emptySub {
+  color: #444;
+  font-size: 14px;
+  font-style: italic;
+  margin-top: 0.5rem;
+}
+
+/* Load More Section */
+.loadMoreWrap {
+  display: flex;
+  justify-content: center;
+  padding: 2.5rem 0 1.5rem;
+  position: relative;
+}
+
+.loadMoreWrap::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 20%;
+  right: 20%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(200, 169, 110, 0.1), transparent);
+}
+
+.loadMoreBtn {
+  padding: 14px 44px;
+  background: transparent;
+  border: 1px solid rgba(200, 169, 110, 0.15);
+  border-radius: 50px;
+  color: var(--gold);
+  font-family: var(--font);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.loadMoreBtn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(200, 169, 110, 0.05), transparent);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.loadMoreBtn:hover:not(:disabled)::before {
+  opacity: 1;
+}
+
+.loadMoreBtn:hover:not(:disabled) {
+  border-color: var(--gold);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(200, 169, 110, 0.1);
+}
+
+.loadMoreBtn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.loadMoreBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.loadMoreIcon {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.loadMoreCount {
+  font-size: 11px;
+  color: #555;
+  font-weight: 300;
+  letter-spacing: 0.05em;
+  padding: 2px 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+}
+
+/* Spinner */
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(200, 169, 110, 0.1);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* End Message */
+.endWrap {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 2.5rem 0 1.5rem;
+}
+
+.endLine {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.04), transparent);
+}
+
+.endMsg {
+  color: #444;
+  font-style: italic;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  padding: 0 10px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
+    gap: 1.25rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+  }
+  
+  .loadMoreBtn {
+    padding: 12px 32px;
+    font-size: 13px;
+    gap: 8px;
+  }
+  
+  .emptyIcon {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 0.75rem;
+  }
+  
+  .loadMoreBtn {
+    padding: 10px 24px;
+    font-size: 12px;
+  }
+  
+  .loadMoreCount {
+    display: none;
+  }
+  
+  .endMsg {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 360px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+}
