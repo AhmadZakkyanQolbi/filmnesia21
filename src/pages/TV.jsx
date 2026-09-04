@@ -50,17 +50,7 @@ export default function TV() {
   const didRestore = useRef(false)
   const searchInputRef = useRef(null)
 
-  // DAFTAR SERIES INDONESIA - HANYA YANG VALID (TIDAK 404)
-  const INDONESIAN_TV = [
-    208988, // Wedding Agreement the Series
-    231637, // Cinta setelah Cinta
-    231638, // My Nerd Girl
-    231641, // Buku Harian Seorang Istri
-    231642, // Ikatan Cinta
-    231643, // Jangan Bercerai Bunda
-    231644, // Aku Bukan Ustazah
-    231645, // Cinta Anak Sholeh
-  ]
+  const INDONESIAN_TV = [208988, 231637, 231638, 231639, 231640, 231641, 231642, 231643, 231644, 231645, 231646, 231647]
 
   const fetchIndonesianTV = async () => {
     try {
@@ -190,6 +180,7 @@ export default function TV() {
     setPlayer(null)
     setShowSubtitleNotice(true)
     
+    // Update SEO
     setSeoData({
       title: `Nonton ${item.name} (${getYear(item.first_air_date)}) - Sub Indo`,
       description: item.overview?.slice(0, 160) || `Nonton series ${item.name} dengan subtitle Indonesia. Streaming gratis kualitas HD.`,
@@ -226,8 +217,6 @@ export default function TV() {
           overview: selected.overview?.slice(0, 220),
           badge: `S${season} · E${episode}`,
           selectedId: selected.id,
-          hasIndonesianSubtitle: result.hasIndonesianSubtitle || false,
-          selectedSubtitle: result.selectedSubtitle || null,
         })
       } else {
         setPlayer({
@@ -240,7 +229,6 @@ export default function TV() {
           badge: `S${season} · E${episode}`,
           selectedId: selected.id,
           provider: result.provider,
-          hasIndonesianSubtitle: result.hasIndonesianSubtitle || false,
         })
       }
       setShowSubtitleNotice(false)
@@ -256,7 +244,6 @@ export default function TV() {
         badge: `S${season} · E${episode}`,
         selectedId: selected.id,
         provider: 'nexstream',
-        hasIndonesianSubtitle: false,
       })
       setShowSubtitleNotice(false)
     }
@@ -379,8 +366,6 @@ export default function TV() {
                   rating={player.rating}
                   overview={player.overview}
                   onClose={closePlayer}
-                  hasIndonesianSubtitle={player.hasIndonesianSubtitle || false}
-                  selectedSubtitle={player.selectedSubtitle || null}
                 />
               </>
             ) : (

@@ -48,23 +48,9 @@ export default function Movies() {
   const playerAnchorRef = useRef(null)
   const searchInputRef = useRef(null)
 
-  // DAFTAR FILM INDONESIA - HANYA YANG VALID (TIDAK 404)
   const INDONESIAN_MOVIES = [
-    829704, // Agak Laen
-    1005062, // Srimulat: Hil yang Mustahal
-    838088, // KKN di Desa Penari
-    654140, // Yowis Ben 3
-    1013750, // Sewu Dino
-    572822, // Gundala
-    1056712, // Petualangan Sherina 2
-    814788, // Miracle in Cell No. 7 (Indonesia)
-    467454, // Salah Bodi
-    1070450, // Jagat Arwah
-    865843, // Sri Asih
-    622215, // Benyamin Biang Kerok
-    842991, // Dilan 1990
-    842992, // Dilan 1991
-    842993, // Milea
+    829704, 1005062, 1036313, 838088, 654140, 1013750, 1066015,
+    593778, 497594, 572822, 1056712, 814788, 467454, 1070450, 1097430
   ]
 
   const fetchIndonesianMovies = async () => {
@@ -183,6 +169,7 @@ export default function Movies() {
 
   async function select(item) {
     try {
+      // Update SEO
       setSeoData({
         title: `Nonton ${item.title} (${getYear(item.release_date)}) - Sub Indo`,
         description: item.overview?.slice(0, 160) || `Nonton film ${item.title} dengan subtitle Indonesia. Streaming gratis kualitas HD.`,
@@ -206,8 +193,6 @@ export default function Movies() {
           rating: formatRating(item.vote_average),
           overview: item.overview?.slice(0, 220),
           selectedId: item.id,
-          hasIndonesianSubtitle: result.hasIndonesianSubtitle || false,
-          selectedSubtitle: result.selectedSubtitle || null,
         })
       } else {
         setPlayer({
@@ -219,7 +204,6 @@ export default function Movies() {
           overview: item.overview?.slice(0, 220),
           selectedId: item.id,
           provider: result.provider,
-          hasIndonesianSubtitle: result.hasIndonesianSubtitle || false,
         })
       }
       setShowSubtitleNotice(false)
@@ -234,7 +218,6 @@ export default function Movies() {
         overview: item.overview?.slice(0, 220),
         selectedId: item.id,
         provider: 'nexstream',
-        hasIndonesianSubtitle: false,
       })
       setShowSubtitleNotice(false)
     }
@@ -357,8 +340,6 @@ export default function Movies() {
                   rating={player.rating}
                   overview={player.overview}
                   onClose={closePlayer}
-                  hasIndonesianSubtitle={player.hasIndonesianSubtitle || false}
-                  selectedSubtitle={player.selectedSubtitle || null}
                 />
               </>
             ) : (

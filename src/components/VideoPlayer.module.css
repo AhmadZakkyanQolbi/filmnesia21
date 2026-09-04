@@ -211,17 +211,3 @@
   .title { font-size: 0.9rem; }
   .overview { font-size: 11px; }
 }
-
-/* Tambahkan di VideoPlayer.module.css di bagian bawah */
-
-.badge {
-  border-color: rgba(76, 175, 80, 0.2);
-  color: #4CAF50;
-  background: rgba(76, 175, 80, 0.05);
-}
-
-.noBadge {
-  border-color: rgba(255, 0, 0, 0.1);
-  color: #888;
-  background: rgba(255, 0, 0, 0.02);
-}

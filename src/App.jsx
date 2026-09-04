@@ -82,29 +82,6 @@ export default function App() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // ==========================================
-  // ✅ ADS: Popunder & Social Bar
-  // ==========================================
-  useEffect(() => {
-    // Popunder - WAJIB
-    const popunderScript = document.createElement('script')
-    popunderScript.src = 'https://pl31175852.profitableratecpmnetwork.com/dd/57/e5/dd57e5e042b4d9b80f9b5a4688ffb4ab.js'
-    popunderScript.async = true
-    document.head.appendChild(popunderScript)
-
-    // Social Bar - WAJIB
-    const socialBarScript = document.createElement('script')
-    socialBarScript.src = 'https://pl31175854.profitableratecpmnetwork.com/16/46/09/164609917458e0c4b87c862156a60fbf.js'
-    socialBarScript.async = true
-    document.head.appendChild(socialBarScript)
-
-    // Cleanup
-    return () => {
-      document.head.removeChild(popunderScript)
-      document.head.removeChild(socialBarScript)
-    }
-  }, [])
-
   useEffect(() => {
     const hasVisited = sessionStorage.getItem('filmnesia21_visited')
     if (hasVisited) {
@@ -143,20 +120,20 @@ export default function App() {
           <title>Filmnesia 21 - Nonton Film & TV Series Gratis Subtitle Indonesia</title>
           <meta name="description" content="Nonton streaming film dan TV series gratis dengan subtitle Indonesia. Ribuan film Hollywood, Drakor, Anime, dan Film Indonesia terlengkap. Filmnesia 21 - Nonton Gratis Tanpa Batas." />
           <meta name="keywords" content="nonton film gratis, streaming film indonesia, drakor subtitle indonesia, anime sub indo, film hollywood, filmnesia 21, nonton online gratis" />
-          <link rel="canonical" href="https://filmnesia21.vercel.app/" />
+          <link rel="canonical" href="https://filmnesia21.website/" />
           
           <meta property="og:title" content="Filmnesia 21 - Nonton Film & TV Series Gratis Subtitle Indonesia" />
           <meta property="og:description" content="Nonton streaming film dan TV series gratis dengan subtitle Indonesia. Ribuan film Hollywood, Drakor, Anime, dan Film Indonesia terlengkap." />
           <meta property="og:type" content="website" />
-          <meta property="og:url" content="https://filmnesia21.vercel.app/" />
-          <meta property="og:image" content="https://filmnesia21.vercel.app/og-image.jpg" />
+          <meta property="og:url" content="https://filmnesia21.website/" />
+          <meta property="og:image" content="https://filmnesia21.website/og-image.jpg" />
           <meta property="og:site_name" content="Filmnesia 21" />
           <meta property="og:locale" content="id_ID" />
           
           <meta name="twitter:card" content="summary_large_image" />
           <meta name="twitter:title" content="Filmnesia 21 - Nonton Film & TV Series Gratis" />
           <meta name="twitter:description" content="Nonton streaming film dan TV series gratis dengan subtitle Indonesia." />
-          <meta name="twitter:image" content="https://filmnesia21.vercel.app/og-image.jpg" />
+          <meta name="twitter:image" content="https://filmnesia21.website/og-image.jpg" />
           
           <meta name="robots" content="index, follow" />
           
@@ -165,12 +142,12 @@ export default function App() {
               '@context': 'https://schema.org',
               '@type': 'WebSite',
               'name': 'Filmnesia 21',
-              'url': 'https://filmnesia21.vercel.app/',
+              'url': 'https://filmnesia21.website/',
               'description': 'Nonton streaming film dan TV series gratis dengan subtitle Indonesia. Ribuan film Hollywood, Drakor, Anime, dan Film Indonesia terlengkap.',
               'inLanguage': 'id',
               'potentialAction': {
                 '@type': 'SearchAction',
-                'target': 'https://filmnesia21.vercel.app/search?q={search_term_string}',
+                'target': 'https://filmnesia21.website/search?q={search_term_string}',
                 'query-input': 'required name=search_term_string'
               }
             })}
@@ -254,6 +231,7 @@ export default function App() {
               <p className={styles.footerText}>
                 &copy; {new Date().getFullYear()} All rights reserved
                 <span className={styles.footerDivider}>•</span>
+                {/* ✅ FIX: href="#" diubah menjadi href="/" */}
                 <a href="/" className={styles.footerLink}>FILMNESIA 21</a>
                 <span className={styles.footerDivider}>•</span>
                 <span className={styles.footerSub}>Digital Entertainment Democratized</span>
