@@ -9,12 +9,15 @@ export default function VideoPlayer({
   year, 
   rating, 
   overview, 
-  onClose 
+  onClose,
+  hasIndonesianSubtitle = false,
+  selectedSubtitle = null
 }) {
   const videoRef = useRef(null)
   const [isLoaded, setIsLoaded] = useState(false)
   const [currentSubtitle, setCurrentSubtitle] = useState(null)
   const [subtitlesList, setSubtitlesList] = useState([])
+  const [subtitleActivated, setSubtitleActivated] = useState(false)
 
   useEffect(() => {
     if (!hlsUrl || !videoRef.current) return
@@ -31,7 +34,6 @@ export default function VideoPlayer({
       
       hls.on(Hls.Events.MANIFEST_PARSED, () => {
         setIsLoaded(true)
-        // Auto play after loaded
         video.play().catch(() => {})
       })
 
@@ -51,9 +53,11 @@ export default function VideoPlayer({
     }
   }, [hlsUrl])
 
-  // Setup subtitle tracks - otomatis aktifkan subtitle Indonesia
+  // Setup subtitle tracks - AUTO AKTIFKAN SUBTITLE INDONESIA
   useEffect(() => {
-    if (!videoRef.current || !subtitles || subtitles.length === 0) return
+    if (!videoRef.current || !subtitles || subtitles.length === 0) {
+      return
+    }
 
     const video = videoRef.current
     
@@ -62,10 +66,11 @@ export default function VideoPlayer({
       video.removeChild(video.textTracks[0])
     }
 
-    // Cari subtitle Indonesia
+    // Cari subtitle Indonesia dengan keyword lengkap
     const indoIndex = subtitles.findIndex(s => {
       const label = (s.label || s.lang || '').toLowerCase()
-      return label.includes('ind') || label.includes('id') || label.includes('indonesia')
+      const keywords = ['indonesian', 'indonesia', 'ind', 'id', 'bahasa indonesia', 'sub indo', 'indo']
+      return keywords.some(keyword => label.includes(keyword))
     })
 
     // Tambahkan subtitle tracks
@@ -76,7 +81,6 @@ export default function VideoPlayer({
       track.label = sub.label || `Subtitle ${index + 1}`
       track.src = sub.url
       track.srcLang = sub.lang || 'id'
-      // Aktifkan subtitle Indonesia jika ditemukan, atau track pertama jika tidak
       track.default = index === (indoIndex !== -1 ? indoIndex : 0)
       video.appendChild(track)
       trackList.push({ 
@@ -88,18 +92,56 @@ export default function VideoPlayer({
     })
     
     setSubtitlesList(trackList)
+    setSubtitleActivated(false)
     
-    // Aktifkan subtitle Indonesia atau track pertama
-    setTimeout(() => {
-      if (video.textTracks.length > 0) {
-        const targetIndex = indoIndex !== -1 ? indoIndex : 0
+    // AKTIFKAN SUBTITLE INDONESIA SECARA OTOMATIS
+    const activateSubtitle = () => {
+      if (video.textTracks.length > 0 && !subtitleActivated) {
+        // Cari track yang mengandung "Indonesian" atau "id"
+        let targetIndex = -1
         for (let i = 0; i < video.textTracks.length; i++) {
-          video.textTracks[i].mode = i === targetIndex ? 'showing' : 'hidden'
+          const label = video.textTracks[i].label || ''
+          if (label.toLowerCase().includes('indonesian') || 
+              label.toLowerCase().includes('indonesia') ||
+              label.toLowerCase().includes('id') ||
+              label.toLowerCase().includes('bahasa')) {
+            targetIndex = i
+            break
+          }
         }
-        setCurrentSubtitle(trackList[targetIndex] || trackList[0])
+        
+        // Jika tidak ditemukan, gunakan indoIndex atau track pertama
+        if (targetIndex === -1) {
+          targetIndex = indoIndex !== -1 ? indoIndex : 0
+        }
+        
+        // Aktifkan subtitle
+        if (targetIndex !== -1 && video.textTracks[targetIndex]) {
+          video.textTracks[targetIndex].mode = 'showing'
+          // Sembunyikan track lain
+          for (let i = 0; i < video.textTracks.length; i++) {
+            if (i !== targetIndex) {
+              video.textTracks[i].mode = 'hidden'
+            }
+          }
+          setCurrentSubtitle(trackList[targetIndex] || trackList[0])
+          setSubtitleActivated(true)
+          console.log(`✅ Subtitle "${trackList[targetIndex]?.label || 'auto'}" activated automatically!`)
+        }
       }
-    }, 200)
-  }, [subtitles])
+    }
+
+    // Coba aktivasi setelah 300ms, 600ms, 1000ms, dan 2000ms
+    setTimeout(activateSubtitle, 300)
+    setTimeout(activateSubtitle, 600)
+    setTimeout(activateSubtitle, 1000)
+    setTimeout(activateSubtitle, 2000)
+
+    // Cleanup
+    return () => {
+      setSubtitleActivated(false)
+    }
+  }, [subtitles, hasIndonesianSubtitle])
 
   // Ganti subtitle
   const changeSubtitle = (index) => {
@@ -113,6 +155,9 @@ export default function VideoPlayer({
 
   if (!hlsUrl) return null
 
+  const hasSubtitle = subtitlesList.length > 0 || hasIndonesianSubtitle
+  const subtitleStatus = hasSubtitle ? '✅ Subtitle Indonesia' : '❌ Tidak Ada Subtitle'
+
   return (
     <div className={styles.wrap}>
       <div className={styles.header}>
@@ -123,8 +168,8 @@ export default function VideoPlayer({
             <div className={styles.pills}>
               {year && <span className={styles.pill}>{year}</span>}
               {rating && <span className={`${styles.pill} ${styles.gold}`}>★ {rating}</span>}
-              <span className={`${styles.pill} ${styles.badge}`}>
-                {subtitlesList.length > 0 ? '✅ Subtitle' : '📺 HLS'}
+              <span className={`${styles.pill} ${hasSubtitle ? styles.badge : styles.noBadge}`}>
+                {subtitleStatus}
               </span>
             </div>
           </div>

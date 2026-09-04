@@ -226,6 +226,8 @@ export default function TV() {
           overview: selected.overview?.slice(0, 220),
           badge: `S${season} · E${episode}`,
           selectedId: selected.id,
+          hasIndonesianSubtitle: result.hasIndonesianSubtitle || false,
+          selectedSubtitle: result.selectedSubtitle || null,
         })
       } else {
         setPlayer({
@@ -238,6 +240,7 @@ export default function TV() {
           badge: `S${season} · E${episode}`,
           selectedId: selected.id,
           provider: result.provider,
+          hasIndonesianSubtitle: result.hasIndonesianSubtitle || false,
         })
       }
       setShowSubtitleNotice(false)
@@ -253,6 +256,7 @@ export default function TV() {
         badge: `S${season} · E${episode}`,
         selectedId: selected.id,
         provider: 'nexstream',
+        hasIndonesianSubtitle: false,
       })
       setShowSubtitleNotice(false)
     }
@@ -375,6 +379,8 @@ export default function TV() {
                   rating={player.rating}
                   overview={player.overview}
                   onClose={closePlayer}
+                  hasIndonesianSubtitle={player.hasIndonesianSubtitle || false}
+                  selectedSubtitle={player.selectedSubtitle || null}
                 />
               </>
             ) : (

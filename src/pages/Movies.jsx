@@ -206,6 +206,8 @@ export default function Movies() {
           rating: formatRating(item.vote_average),
           overview: item.overview?.slice(0, 220),
           selectedId: item.id,
+          hasIndonesianSubtitle: result.hasIndonesianSubtitle || false,
+          selectedSubtitle: result.selectedSubtitle || null,
         })
       } else {
         setPlayer({
@@ -217,6 +219,7 @@ export default function Movies() {
           overview: item.overview?.slice(0, 220),
           selectedId: item.id,
           provider: result.provider,
+          hasIndonesianSubtitle: result.hasIndonesianSubtitle || false,
         })
       }
       setShowSubtitleNotice(false)
@@ -231,6 +234,7 @@ export default function Movies() {
         overview: item.overview?.slice(0, 220),
         selectedId: item.id,
         provider: 'nexstream',
+        hasIndonesianSubtitle: false,
       })
       setShowSubtitleNotice(false)
     }
@@ -353,6 +357,8 @@ export default function Movies() {
                   rating={player.rating}
                   overview={player.overview}
                   onClose={closePlayer}
+                  hasIndonesianSubtitle={player.hasIndonesianSubtitle || false}
+                  selectedSubtitle={player.selectedSubtitle || null}
                 />
               </>
             ) : (

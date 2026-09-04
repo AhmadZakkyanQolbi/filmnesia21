@@ -94,24 +94,20 @@ async function tmdbFetch(path) {
 // API OBJECT
 // ============================================
 export const api = {
-  // MOVIES
   trendingMovies: (page = 1) => {
     const validPage = Math.max(1, parseInt(page) || 1)
     return tmdbFetch(`/trending/movie/week?page=${validPage}`)
   },
-  
   searchMovies: (q, page = 1) => {
     if (!q || typeof q !== 'string') return Promise.reject(new Error('Search query required'))
     const sanitizedQuery = q.trim().slice(0, 100)
     const validPage = Math.max(1, parseInt(page) || 1)
     return tmdbFetch(`/search/movie?query=${encodeURIComponent(sanitizedQuery)}&page=${validPage}`)
   },
-  
   movieDetails: (id) => {
     const validId = validateTMDBId(id)
     return tmdbFetch(`/movie/${validId}`)
   },
-  
   discoverMovies: (page = 1, genre = '') => {
     const validPage = Math.max(1, parseInt(page) || 1)
     let url = `/discover/movie?sort_by=popularity.desc&page=${validPage}`
@@ -121,39 +117,32 @@ export const api = {
     }
     return tmdbFetch(url)
   },
-  
   popularMovies: (page = 1) => {
     const validPage = Math.max(1, parseInt(page) || 1)
     return tmdbFetch(`/movie/popular?page=${validPage}`)
   },
-  
   topRatedMovies: (page = 1) => {
     const validPage = Math.max(1, parseInt(page) || 1)
     return tmdbFetch(`/movie/top_rated?page=${validPage}`)
   },
-  
   upcomingMovies: (page = 1) => {
     const validPage = Math.max(1, parseInt(page) || 1)
     return tmdbFetch(`/movie/upcoming?page=${validPage}`)
   },
-  
   nowPlayingMovies: (page = 1) => {
     const validPage = Math.max(1, parseInt(page) || 1)
     return tmdbFetch(`/movie/now_playing?page=${validPage}`)
   },
-  
   movieRecommendations: (id, page = 1) => {
     const validId = validateTMDBId(id)
     const validPage = Math.max(1, parseInt(page) || 1)
     return tmdbFetch(`/movie/${validId}/recommendations?page=${validPage}`)
   },
-  
   similarMovies: (id, page = 1) => {
     const validId = validateTMDBId(id)
     const validPage = Math.max(1, parseInt(page) || 1)
     return tmdbFetch(`/movie/${validId}/similar?page=${validPage}`)
   },
-  
   getMovieGenres: () => tmdbFetch('/genre/movie/list'),
   
   // TV SHOWS
@@ -161,25 +150,21 @@ export const api = {
     const validPage = Math.max(1, parseInt(page) || 1)
     return tmdbFetch(`/trending/tv/week?page=${validPage}`)
   },
-  
   searchTV: (q, page = 1) => {
     if (!q || typeof q !== 'string') return Promise.reject(new Error('Search query required'))
     const sanitizedQuery = q.trim().slice(0, 100)
     const validPage = Math.max(1, parseInt(page) || 1)
     return tmdbFetch(`/search/tv?query=${encodeURIComponent(sanitizedQuery)}&page=${validPage}`)
   },
-  
   tvDetails: (id) => {
     const validId = validateTMDBId(id)
     return tmdbFetch(`/tv/${validId}`)
   },
-  
   seasonDetails: (id, season) => {
     const validId = validateTMDBId(id)
     validateSeasonEpisode(season)
     return tmdbFetch(`/tv/${validId}/season/${season}`)
   },
-  
   discoverTV: (page = 1, genre = '') => {
     const validPage = Math.max(1, parseInt(page) || 1)
     let url = `/discover/tv?sort_by=popularity.desc&page=${validPage}`
@@ -189,39 +174,32 @@ export const api = {
     }
     return tmdbFetch(url)
   },
-  
   popularTV: (page = 1) => {
     const validPage = Math.max(1, parseInt(page) || 1)
     return tmdbFetch(`/tv/popular?page=${validPage}`)
   },
-  
   topRatedTV: (page = 1) => {
     const validPage = Math.max(1, parseInt(page) || 1)
     return tmdbFetch(`/tv/top_rated?page=${validPage}`)
   },
-  
   airingTodayTV: (page = 1) => {
     const validPage = Math.max(1, parseInt(page) || 1)
     return tmdbFetch(`/tv/airing_today?page=${validPage}`)
   },
-  
   onTheAirTV: (page = 1) => {
     const validPage = Math.max(1, parseInt(page) || 1)
     return tmdbFetch(`/tv/on_the_air?page=${validPage}`)
   },
-  
   tvRecommendations: (id, page = 1) => {
     const validId = validateTMDBId(id)
     const validPage = Math.max(1, parseInt(page) || 1)
     return tmdbFetch(`/tv/${validId}/recommendations?page=${validPage}`)
   },
-  
   similarTV: (id, page = 1) => {
     const validId = validateTMDBId(id)
     const validPage = Math.max(1, parseInt(page) || 1)
     return tmdbFetch(`/tv/${validId}/similar?page=${validPage}`)
   },
-  
   getTVGenres: () => tmdbFetch('/genre/tv/list'),
 }
 
@@ -252,12 +230,17 @@ export async function getVideoWithSubtitles(tmdbId, type = 'movie', season, epis
         }))
         .filter(s => s.url !== null)
       
+      const indoSub = findIndonesianSubtitle(validSubtitles)
+      
       return {
         hlsUrl,
         subtitles: validSubtitles,
         audioTracks: result.audioTracks || [],
         success: true,
-        provider: 'vidsrc'
+        provider: 'vidsrc',
+        hasSubtitle: validSubtitles.length > 0,
+        hasIndonesianSubtitle: !!indoSub,
+        selectedSubtitle: indoSub
       }
     }
     return { success: false, error: result.error || 'No HLS URL found' }
@@ -275,7 +258,10 @@ export function findIndonesianSubtitle(subtitles) {
   
   const priorityList = [
     'indonesian', 'indonesia', 'ind', 'id', 
-    'bahasa indonesia', 'sub indo', 'indo'
+    'bahasa indonesia', 'sub indo', 'indo',
+    'indonesian (id)', 'id (indonesian)',
+    'bahasa', 'indonesian (auto-generated)',
+    'indonesian subtitles', 'id subtitles'
   ]
   
   const indoSub = subtitles.find(s => {
@@ -314,40 +300,24 @@ export function tvEmbedUrl(tmdbId, season, episode) {
 }
 
 // ============================================
-// 4. VIDCORE - SUBTITLE INDONESIA
+// 4. VIDCORE - SUBTITLE INDONESIA (PRIORITAS)
 // ============================================
-const ALLOWED_SUBTITLES = ['id', 'en', 'default']
-const ALLOWED_THEMES = ['dark', 'light']
-const ALLOWED_QUALITIES = ['240', '360', '480', '720', '1080']
-
-function validateSubtitle(subtitle) {
-  return ALLOWED_SUBTITLES.includes(subtitle) ? subtitle : 'id'
-}
-
-function validateTheme(theme) {
-  return ALLOWED_THEMES.includes(theme) ? theme : 'dark'
-}
-
-function validateQuality(quality) {
-  return ALLOWED_QUALITIES.includes(quality) ? quality : '480'
-}
-
 export function movieEmbedVidCore(tmdbId, options = {}) {
   try {
     const validId = validateTMDBId(tmdbId)
     
-    const subtitle = validateSubtitle(options.subtitle || 'id')
-    const theme = validateTheme(options.theme || 'dark')
-    const quality = validateQuality(options.quality || '480')
-    const autoplay = options.autoplay === true
+    const subtitle = 'id'
+    const theme = 'dark'
+    const quality = '480'
+    const autoplay = true
     
     const url = `https://vidcore.org/embed/movie/${validId}`
     const params = new URLSearchParams({
-      subtitle,
-      autoplay: autoplay ? 'true' : 'false',
-      theme,
+      subtitle: subtitle,
+      autoplay: 'true',
+      theme: theme,
       logo: 'false',
-      quality
+      quality: quality
     })
     
     return sanitizeUrl(`${url}?${params.toString()}`)
@@ -362,18 +332,18 @@ export function tvEmbedVidCore(tmdbId, season, episode, options = {}) {
     const validId = validateTMDBId(tmdbId)
     validateSeasonEpisode(season, episode)
     
-    const subtitle = validateSubtitle(options.subtitle || 'id')
-    const theme = validateTheme(options.theme || 'dark')
-    const quality = validateQuality(options.quality || '480')
-    const autoplay = options.autoplay === true
+    const subtitle = 'id'
+    const theme = 'dark'
+    const quality = '480'
+    const autoplay = true
     
     const url = `https://vidcore.org/embed/tv/${validId}/${season}/${episode}`
     const params = new URLSearchParams({
-      subtitle,
-      autoplay: autoplay ? 'true' : 'false',
-      theme,
+      subtitle: subtitle,
+      autoplay: 'true',
+      theme: theme,
       logo: 'false',
-      quality
+      quality: quality
     })
     
     return sanitizeUrl(`${url}?${params.toString()}`)
@@ -428,48 +398,7 @@ export async function getNontongoTvUrl(tmdbId, season, episode) {
 }
 
 // ============================================
-// 6. PROVIDER LAIN
-// ============================================
-const ALLOWED_PROVIDERS = ['autoembed', 'vidcloud', 'doodstream', 'upcloud']
-
-export async function getProviderUrl(tmdbId, type = 'movie', provider, season, episode) {
-  try {
-    const validId = validateTMDBId(tmdbId)
-    
-    if (!ALLOWED_PROVIDERS.includes(provider)) {
-      console.warn(`Provider ${provider} tidak diizinkan`)
-      return null
-    }
-    
-    if (type !== 'movie' && type !== 'tv') {
-      throw new Error('Invalid type')
-    }
-    
-    let urls
-    if (type === 'movie') {
-      urls = buildMovieSources(validId, { ids: [provider] })
-    } else {
-      validateSeasonEpisode(season, episode)
-      urls = buildTvSources(validId, season, episode, { ids: [provider] })
-    }
-    
-    if (urls && urls.length > 0) {
-      const probe = await probeProvider(provider, { timeoutMs: 3000 })
-      if (probe.status === 'alive') {
-        const url = urls[0]
-        const finalUrl = url.includes('?') ? `${url}&subtitle=id` : `${url}?subtitle=id`
-        return sanitizeUrl(finalUrl)
-      }
-    }
-    return null
-  } catch (error) {
-    console.error(`Error getting ${provider} URL:`, error)
-    return null
-  }
-}
-
-// ============================================
-// 7. SMART FALLBACK
+// 6. SMART FALLBACK - PRIORITAS SUBTITLE
 // ============================================
 export async function getSmartMovieUrl(tmdbId) {
   try {
@@ -481,12 +410,13 @@ export async function getSmartMovieUrl(tmdbId) {
       const result = await getVideoWithSubtitles(validId, 'movie')
       if (result.success && result.hlsUrl) {
         const indoSub = findIndonesianSubtitle(result.subtitles)
-        console.log(`✅ Using HLS for movie ${validId}, subtitles: ${result.subtitles.length} tracks`)
+        console.log(`✅ Using HLS for movie ${validId}, subtitles: ${result.subtitles.length} tracks, indo: ${!!indoSub}`)
         return { 
           type: 'hls',
           hlsUrl: result.hlsUrl,
           subtitles: result.subtitles,
           selectedSubtitle: indoSub,
+          hasIndonesianSubtitle: !!indoSub,
           provider: 'hls'
         }
       }
@@ -499,7 +429,7 @@ export async function getSmartMovieUrl(tmdbId) {
       const url = movieEmbedVidCore(validId)
       if (url) {
         console.log(`✅ Using VidCore for movie ${validId}`)
-        return { type: 'iframe', src: url, provider: 'vidcore' }
+        return { type: 'iframe', src: url, provider: 'vidcore', hasIndonesianSubtitle: true }
       }
     } catch (e) {}
 
@@ -508,30 +438,21 @@ export async function getSmartMovieUrl(tmdbId) {
       const url = await getNontongoMovieUrl(validId)
       if (url) {
         console.log(`✅ Using Nontongo for movie ${validId}`)
-        return { type: 'iframe', src: url, provider: 'nontongo' }
-      }
-    } catch (e) {}
-
-    // PRIORITAS 4: Autoembed
-    try {
-      const url = await getProviderUrl(validId, 'movie', 'autoembed')
-      if (url) {
-        console.log(`✅ Using Autoembed for movie ${validId}`)
-        return { type: 'iframe', src: url, provider: 'autoembed' }
+        return { type: 'iframe', src: url, provider: 'nontongo', hasIndonesianSubtitle: true }
       }
     } catch (e) {}
 
     // FALLBACK: NexStream
-    console.warn(`⚠️ Fallback to NexStream for ${validId}`)
+    console.warn(`⚠️ Fallback to NexStream for ${validId} (no subtitle)`)
     const fallbackUrl = movieEmbedUrl(validId)
     if (fallbackUrl) {
-      return { type: 'iframe', src: fallbackUrl, provider: 'nexstream' }
+      return { type: 'iframe', src: fallbackUrl, provider: 'nexstream', hasIndonesianSubtitle: false }
     }
     
     throw new Error('No working provider found')
   } catch (error) {
     console.error('Error getting smart movie URL:', error)
-    return { type: 'error', error: error.message }
+    return { type: 'error', error: error.message, hasIndonesianSubtitle: false }
   }
 }
 
@@ -546,12 +467,13 @@ export async function getSmartTvUrl(tmdbId, season, episode) {
       const result = await getVideoWithSubtitles(validId, 'tv', season, episode)
       if (result.success && result.hlsUrl) {
         const indoSub = findIndonesianSubtitle(result.subtitles)
-        console.log(`✅ Using HLS for TV ${validId} S${season}E${episode}, subtitles: ${result.subtitles.length} tracks`)
+        console.log(`✅ Using HLS for TV ${validId} S${season}E${episode}, subtitles: ${result.subtitles.length} tracks, indo: ${!!indoSub}`)
         return { 
           type: 'hls',
           hlsUrl: result.hlsUrl,
           subtitles: result.subtitles,
           selectedSubtitle: indoSub,
+          hasIndonesianSubtitle: !!indoSub,
           provider: 'hls'
         }
       }
@@ -564,7 +486,7 @@ export async function getSmartTvUrl(tmdbId, season, episode) {
       const url = tvEmbedVidCore(validId, season, episode)
       if (url) {
         console.log(`✅ Using VidCore for TV ${validId} S${season}E${episode}`)
-        return { type: 'iframe', src: url, provider: 'vidcore' }
+        return { type: 'iframe', src: url, provider: 'vidcore', hasIndonesianSubtitle: true }
       }
     } catch (e) {}
 
@@ -573,7 +495,7 @@ export async function getSmartTvUrl(tmdbId, season, episode) {
       const url = await getNontongoTvUrl(validId, season, episode)
       if (url) {
         console.log(`✅ Using Nontongo for TV ${validId} S${season}E${episode}`)
-        return { type: 'iframe', src: url, provider: 'nontongo' }
+        return { type: 'iframe', src: url, provider: 'nontongo', hasIndonesianSubtitle: true }
       }
     } catch (e) {}
 
@@ -581,18 +503,18 @@ export async function getSmartTvUrl(tmdbId, season, episode) {
     console.warn(`⚠️ Fallback to NexStream for ${validId}`)
     const fallbackUrl = tvEmbedUrl(validId, season, episode)
     if (fallbackUrl) {
-      return { type: 'iframe', src: fallbackUrl, provider: 'nexstream' }
+      return { type: 'iframe', src: fallbackUrl, provider: 'nexstream', hasIndonesianSubtitle: false }
     }
     
     throw new Error('No working provider found')
   } catch (error) {
     console.error('Error getting smart TV URL:', error)
-    return { type: 'error', error: error.message }
+    return { type: 'error', error: error.message, hasIndonesianSubtitle: false }
   }
 }
 
 // ============================================
-// 8. IMAGE URLs
+// 7. IMAGE URLs
 // ============================================
 export function posterUrl(path, large = false) {
   if (!path || typeof path !== 'string') return null
@@ -608,7 +530,7 @@ export function backdropUrl(path, large = false) {
 }
 
 // ============================================
-// 9. FORMATTING HELPERS
+// 8. FORMATTING HELPERS
 // ============================================
 export function formatRating(rating) {
   if (!rating || isNaN(rating)) return null
@@ -625,7 +547,7 @@ export function formatDate(dateStr) {
   try {
     const date = new Date(dateStr)
     if (isNaN(date.getTime())) return null
-    return date.toLocaleDateString('en-US', { 
+    return date.toLocaleDateString('id-ID', { 
       year: 'numeric', 
       month: 'long', 
       day: 'numeric' 
@@ -644,7 +566,7 @@ export function formatRuntime(minutes) {
 }
 
 // ============================================
-// 10. UTILITY FUNCTIONS
+// 9. UTILITY FUNCTIONS
 // ============================================
 export function getPaginationInfo(data) {
   if (!data || typeof data !== 'object') {
@@ -659,7 +581,7 @@ export function getPaginationInfo(data) {
 }
 
 // ============================================
-// 11. GENRE MAPPING
+// 10. GENRE MAPPING
 // ============================================
 export const GENRE_GROUPS = {
   'All': [],
@@ -676,33 +598,13 @@ export const GENRE_GROUPS = {
 }
 
 export const GENRE_NAMES = {
-  28: 'Action',
-  12: 'Adventure',
-  16: 'Animation',
-  35: 'Comedy',
-  80: 'Crime',
-  99: 'Documentary',
-  18: 'Drama',
-  10751: 'Family',
-  14: 'Fantasy',
-  36: 'History',
-  27: 'Horror',
-  10402: 'Music',
-  9648: 'Mystery',
-  10749: 'Romance',
-  878: 'Science Fiction',
-  10770: 'TV Movie',
-  53: 'Thriller',
-  10752: 'War',
-  37: 'Western',
-  10759: 'Action & Adventure',
-  10762: 'Kids',
-  10763: 'News',
-  10764: 'Reality',
-  10765: 'Sci-Fi & Fantasy',
-  10766: 'Soap',
-  10767: 'Talk',
-  10768: 'War & Politics',
+  28: 'Action', 12: 'Adventure', 16: 'Animation', 35: 'Comedy',
+  80: 'Crime', 99: 'Documentary', 18: 'Drama', 10751: 'Family',
+  14: 'Fantasy', 36: 'History', 27: 'Horror', 10402: 'Music',
+  9648: 'Mystery', 10749: 'Romance', 878: 'Science Fiction', 10770: 'TV Movie',
+  53: 'Thriller', 10752: 'War', 37: 'Western', 10759: 'Action & Adventure',
+  10762: 'Kids', 10763: 'News', 10764: 'Reality', 10765: 'Sci-Fi & Fantasy',
+  10766: 'Soap', 10767: 'Talk', 10768: 'War & Politics',
 }
 
 export function getGenreIdsFromGroup(groupName) {
